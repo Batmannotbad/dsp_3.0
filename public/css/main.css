@@ -1,0 +1,26 @@
+@font-face {
+    font-family: Westgate-Bold;
+    src: url('../fonts/westgate/Fonts/Westgate-Bold.otf'); 
+  }
+  @font-face {
+    font-family: Danhda;
+    src: url('../fonts/danhda/DanhDa-Bold.otf'); 
+  }
+  p {
+    white-space: pre-line;
+  }
+  :root{
+    /* font-family: 'Mulish', sans-serif; */
+    font-family: 'Be Vietnam Pro', sans-serif;
+    --golden: #C58A18;
+    --red-base: #6A1113;
+    --light-yellow: #E2C385;
+    --gray-yellow:#A08F6C;
+    --trans-red-base:rgba(174, 29, 32, 0.48);
+    --text-grey: #717070;
+    --base-yellow: rgba(251, 188, 5, 0.29);
+    --text-dark: #333029;
+    --gray-bg:#F4F4F4;
+    --date-gray:#B7B7B7;
+    --border-gray: #CDCDCD;
+  }

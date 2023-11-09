@@ -1,0 +1,19 @@
+{
+    "userData":[
+      {
+        "userid": 1,
+        "username": "john_doe",
+        "fullname": "John Doe",
+        "jobtitle": "Software Engineer",
+        "password": "s3cur3P@ssw0rd",
+        "img":"https://i.pinimg.com/564x/3b/0c/c4/3b0cc4ec3fc12b313b4f555915d4b59a.jpg"
+      },
+      {
+        "userid": 2,
+        "username": "vann",
+        "fullname": "vann",
+        "jobtitle": "Software Engineer",
+        "password": "vann",
+        "img":"https://i.pinimg.com/736x/a7/56/c0/a756c0bf62067f6d2d3920495c2d2417.jpg"
+      }]
+  }

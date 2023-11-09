@@ -1,0 +1,194 @@
+.login{
+    background-image: url(../../../public/img/Signupdeskopbg.png);
+    /* background-repeat: repeat-x; */
+    background-repeat: repeat;
+    background-size: 500px;
+    height: 100vh;
+    overflow: auto;
+} 
+.web-title{
+    font-family: westgate;
+    background-color: var(--red-base);
+}
+.web-title h1{
+    font-size: 2.5rem;
+    color: var(--golden);
+    letter-spacing: 0.5rem;
+    font-weight: bold;
+}
+.web-name {
+    font-family: Danhda;
+    letter-spacing: 0.2rem;
+    background-color: var(--golden);
+    width: fit-content;
+    border-radius: 4px;
+    color: var(--red-base);
+    font-size: 1.2rem;
+}
+.container{
+    max-width: 720px;
+}
+.form-container{
+    padding-bottom: 5rem!important;
+    position: relative;
+    background-color:white;
+    background-image: url(../../../public/img/containerbg.png);
+    height: 100%;
+    margin-bottom: 3rem;
+}
+.page-title{
+    color: var(--red-base);
+    font-family: Danhda;
+    letter-spacing: 0.2rem;
+    font-size: 1.8rem;
+}
+.googleLoginBtn img{
+    width: 1.5rem;
+}
+.gg-text{
+    font-family: Be Vietnam Pro;
+    color: var(--red-base);
+    font-size: 1rem;
+    font-weight: 100;
+}
+.googleLoginBtn{
+    background-color: transparent;
+    border-radius: 40px;
+    border: solid 1px var(--red-base);
+}
+.border-btm{
+    border-bottom: solid 1px var(--red-base);
+    width: 90%;
+}
+.form-label{
+    color: var(--red-base);
+    font-family: Be Vietnam Pro;
+    font-weight: 600;
+}
+.formplaceholder::placeholder{
+    color: #969696;
+    font-family: Be Vietnam Pro;
+    font-size: 0.8rem;
+    letter-spacing: 0.1rem;
+}
+.check-label{
+    color: var(--red-base);
+    font-family: Be Vietnam Pro;
+    font-size: 0.8rem;
+}
+.forgot-pass-text{
+    text-decoration: none;
+    color: var(--red-base);
+    font-family: Be Vietnam Pro;
+    font-size: 0.8rem;
+}
+.form-check-input{
+    margin-top: 0;
+}
+.submit-btn{
+    background-color: var(--red-base);
+    color:white;
+    padding: 0.5em 0;
+    border: none;
+    font-family: Be Vietnam Pro;
+    text-transform: capitalize;
+    font-weight: 600;
+    letter-spacing: 0.2rem;
+    border-radius: 8px;
+    min-width: 300px;
+    max-width: 700px;
+    width: 100%;
+
+}
+.submit-container{
+    width: 100%;
+}
+.form-check-input:checked {
+    background-color: var(--red-base);
+    border-color: var(--red-base);
+  }
+.direct{
+    font-size: 0.8rem;
+    color: var(--red-base);
+    font-family: Be Vietnam Pro;
+}
+.direct-link{
+    color: var(--red-base);
+    font-family: Be Vietnam Pro;
+}
+.angle-pattern {
+    position: absolute;
+    bottom: 0px;
+    right: 0;
+  }
+  .angle-pattern img{
+    width: 120px;
+  }
+  .footer {
+    position:fixed;
+    bottom: 0;
+    width: 100%;
+    font-size: 0.7rem;
+    font-family: Be Vietnam Pro;
+    color: wheat;
+    background-color: var(--red-base);
+    text-align: center;
+    padding: 1rem;
+  }
+  .is-invalid {
+    border-color: red;
+  }
+  
+  .invalid-feedback {
+    color: red;
+    font-size: 12px;
+  }
+  @media (min-width: 576px){
+    .web-title h1{
+        font-size: 4rem;
+        font-weight: bolder;
+        /* padding-top: 1rem!important; */
+    }
+    .web-name{
+        font-size: 2rem;
+        padding: 0.25rem 0.75rem 0.75rem 0.75rem!important;
+        /* width: 80%; */
+        text-align: center;
+        max-width: 790px;
+    }
+    /* .web-name-contain{
+        margin-top: 2rem!important;
+    } */
+    .form-container{
+        margin-top: 2rem!important;
+        padding-bottom: 10rem!important;
+    }
+    .page-title {
+        font-size: 3rem!important;
+        margin-bottom: 1rem!important;
+    }
+    .gg-text{
+        font-size: 1.25rem;
+        
+    }
+    .googleLoginBtn img{
+        width: 2rem;
+    }
+    /* .form-label{
+         padding: 0.25rem 0; 
+    } */
+    .form-control{
+        padding: 0.5rem 0.75rem;
+    }
+    .submit-btn{
+        max-width: 500px;
+    }
+    .angle-pattern img{
+        width: 200px;
+    }
+    .login-form{
+        max-width: 80%;
+    }
+
+  }
+  
