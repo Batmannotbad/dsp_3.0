@@ -295,6 +295,19 @@
     transform: scale(1.1);
     transition: transform 0.5s;
   }
-
+.custom-toggle{
+  background-color: none;
+}
+button.dropdown-toggle.btn.btn-primary{
+  background-color: transparent;
+  border: none;
+}
+.dropdown-toggle::after{
+  display: none;
+}
+button.dropdown-toggle.btn.btn-primary:focus{
+  border: none;
+  box-shadow: none;
+}
 
   

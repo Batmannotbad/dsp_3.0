@@ -108,6 +108,7 @@ export const getCurrentUser = async (token) => {
       throw error;
     }
   };
+  
   export const getSharedBoxs = async (token) => {
     try {
       const response = await fetch('http://localhost:5296/api/BoxInteract/GetBoxShareCurrentUser', {
@@ -130,6 +131,7 @@ export const getCurrentUser = async (token) => {
       throw error;
     }
   };
+  // Tạo Post
   export const createBox = async (token, title, content, file, img) => {
   try {
     const formData = new FormData();
@@ -171,9 +173,10 @@ export const getCurrentUser = async (token) => {
   }
 };
 
+//Lấy thông tin chi tiết của Post
 export const getBoxDetail = async (token, boxId) => {
   try {
-    const response = await fetch(`http://localhost:5296/api/Box/GetBoxDetail?${boxId}`, {
+    const response = await fetch(`http://localhost:5296/api/Box/GetDetailBox?boxId=${boxId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -186,6 +189,62 @@ export const getBoxDetail = async (token, boxId) => {
       return data;
     } else {
       throw new Error('Failed to get box detail');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+
+
+export const getSharedBoxsAndDetails = async (token) => {
+  try {
+    const sharedBoxs = await getSharedBoxs(token);
+    const boxIds = sharedBoxs.map((box) => box.boxId);
+    const boxDetails = await Promise.all(boxIds.map((boxId) => getBoxDetail(token, boxId)));
+    return boxDetails;
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+
+// Delete Post
+export const deleteBox = async (token, boxId) => {
+  try {
+    const response = await fetch(`http://localhost:5296/api/Box/DeleteBox?boxId=${boxId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error('Failed to delete box');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+
+export const userLogout = async (token) => {
+  try {
+    const response = await fetch('http://localhost:5296/api/Account/Logout', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+    } else {
+      throw new Error('Failed to logout');
     }
   } catch (error) {
     console.error('Error:', error);

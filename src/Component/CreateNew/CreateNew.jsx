@@ -87,7 +87,10 @@ const CreateNew = ({ show, handleClose }) => {
         </form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
+      <Button variant="secondary" onClick={() => {
+        handleClose(); 
+        window.location.reload(); 
+      }}>
           Đóng
         </Button>
         

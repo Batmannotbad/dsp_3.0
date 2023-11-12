@@ -1,31 +1,78 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { deleteBox, getBoxDetail } from '../APIController';
+import { useSelector } from 'react-redux';
+import ConfirmModal from './ConfirmModal';
 
-const PostDetail = () => {
+const PostDetail = ({ postId }) => {
+    const token = useSelector(state => state.user.token);
+    const selectedPostId = useSelector(state => state.post.selectedPostID);
+    const [postData, setPostData] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [isDeleted, setIsDeleted] = useState(false);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                console.log(postId);
+                const data = await getBoxDetail(token, postId);
+                setPostData(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchData();
+    }, [postId]);
+    useEffect(() => {
+        console.log(postData);
+    }, [postData]);
+    const handleDeleteBox = () => {
+        setShowModal(true);
+      };
+      const confirmDelete = async () => {
+        try {
+          await deleteBox(token, postId);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setIsDeleted(true);
+          setShowModal(false);
+          window.alert('Bài viết đã bị xóa');
+          window.location.reload();
+        }
+      };
+      
+      const handleCloseModal = () => {
+        setShowModal(false);
+      };
+
   return (
     <div className='prev-container'>
         <div className='post-banner-prev'>
-            <img src="https://i.pinimg.com/564x/dd/1f/d3/dd1fd3528251debb39275463bd30d0ee.jpg" alt="Post Banner" />
+        {postData && <img src={`http://localhost:5296/${postData.img}`} alt="" />}
         </div>
         <div className='activities-button d-flex justify-content-between'>
             <button className='control-btn'>
-            <img src="./img/downloadbtn.png" alt="" />
+            <img src="./img/downloadbtn.png" alt="downloadbtn" />
             </button>
-            <button className='control-btn'>
-            <img src="./img/binbtn.png" alt="" />
+            <button className='control-btn' onClick={handleDeleteBox}>
+            <img src="./img/binbtn.png" alt="binbtn" />
             </button>
+            <ConfirmModal
+            show={showModal}
+            handleClose={handleCloseModal}
+            handleConfirm={confirmDelete}
+            />
+            
             <button className='control-btn'>
-            <img src="./img/detailsbtn.png" alt="" />
+            <img src="./img/detailsbtn.png" alt="detailsbtn" />
             </button>
 
         </div>
         <div className='prev-post-title'>
-            <span>Thống kê số lượng tỉnh thành sử dụng VNForm trên Cổng Dịch vụ Công trực tuyến</span>
+            {postData&& <span>{postData.title}</span>}
         </div>
         <div className='prev-post-content'>
             <h4 className='prev-header'>Nội dung</h4>
-            <p>Trong thời hạn 45 ngày làm việc kể từ ngày về nước, du học sinh phải nộp 01 bộ hồ sơ qua đường bưu điện hoặc trực tiếp cho Bộ Giáo dục và Đào tạo.</p>
-            <p>Trong thời hạn 05 ngày làm việc, nếu hồ sơ tốt nghiệp về nước không hợp lệ, Bộ Giáo dục và Đào tạo thông báo cho du học sinh để bổ sung và hoàn thiện theo quy định.</p>
-            <p>Trong thời hạn 20 ngày làm việc, kể từ ngày nhận đủ hồ sơ hợp lệ theo quy định tại điểm b khoản này, cơ quan cử đi học có văn bản thông báo cho cơ quan quản lý trực tiếp của du học sinh tiếp nhận về công tác (đối với trường hợp có cơ quan công tác) hoặc giới thiệu du học sinh với cơ quan có nhu cầu tuyển dụng về làm việc hoặc xác nhận đã tốt nghiệp (đối với trường hợp không có cơ quan công tác). Cơ quan cử đi học gửi văn bản này cho du học sinh, cơ quan quản lý trực tiếp của du học sinh (đối với trường hợp có cơ quan công tác).</p>
+            {postData&& <p>{postData.content}</p>}
         </div>
         <div className='prev-files'>
             <h4 className='file-count prev-header'> 3 tệp tin</h4>

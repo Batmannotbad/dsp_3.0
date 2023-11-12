@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getBoxsCurrentUser } from '../APIController';
+import { updateSelectedPostId } from '../features/postSlice';
 
 const PostGrid = ({handleShowPrevContainer}) => {
+  const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
   const token = useSelector((state) => state.user.token);
 
@@ -10,7 +12,7 @@ const PostGrid = ({handleShowPrevContainer}) => {
     const fetchBoxsCurrentUser = async () => {
       try {
         const data = await getBoxsCurrentUser(token);
-        setPosts(data); // store the data in state
+        setPosts(data); 
         console.log(posts);
       } catch (error) {
         console.error('Error:', error);
@@ -19,16 +21,18 @@ const PostGrid = ({handleShowPrevContainer}) => {
 
     fetchBoxsCurrentUser();
   }, [token]);
-  const postClick = () => {
-    handleShowPrevContainer();
-  }
-
+  const postClick = async (postId) => {
+    await dispatch(updateSelectedPostId(postId));
+    handleShowPrevContainer(postId);
+    console.log();
+  };
   return (
       <div className='post-grid-list'>
         {posts.length > 0 ? (
           posts.map((post) => (
-            <div className='post-container' key={post._id}>
-              <div className='post-detail' onClick={postClick}>
+            <div className='post-container' key={post.id}>
+              {/* <div className='post-detail' onClick={postClick}> */}
+              <div className='post-detail' onClick={() => postClick(post.id)}>
                 <div className='border-bottom-thick'>
                   <div className='post-banner-icon d-flex justify-content-between'>
                   <img src={`http://localhost:5296/${post.img}`} alt='post banner' className='banner-img' />

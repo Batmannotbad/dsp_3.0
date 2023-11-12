@@ -6,21 +6,27 @@ import CreateNew from '../../Component/CreateNew/CreateNew';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../features/userSlice';
 import PostGrid from '../../Component/PostGrid';
-import { getCurrentUser } from '../../APIController';
-import SharedPost from '../../Component/SharedPost';
+import { getCurrentUser, userLogout } from '../../APIController';
 import PostDetail from '../../Component/PostDetail';
-
+import SharedPost from '../../Component/SharedPost';
+import { Dropdown } from 'react-bootstrap';
 const Dashboard = () => {
   const dispatch = useDispatch();
+  const selectedPostID = useSelector(state => state.post.selectedPostID);
   const token = useSelector(state => state.user.token);
   const [user, setUser] = useState(null);
   const [show,setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [showPostDetail, setShowPostDetail] = useState(false);
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+    await userLogout(token);
     dispatch(logout());
-  };
+    } catch (error) {
+    console.error('Error:', error);
+    }
+    };
   const fetchCurrentUser = async () => {
     try {
       const data = await getCurrentUser(token);
@@ -33,8 +39,11 @@ const Dashboard = () => {
   useEffect(() =>{
     fetchCurrentUser();
   },[token]);
-  const handleShowPrevContainer = () => {
-    setShowPostDetail(!showPostDetail);
+  const handleShowPrevContainer = (postId) => {
+    console.log("id là:" + postId);
+    if (postId !== null) {
+      setShowPostDetail(true);
+    }
   };
 
  
@@ -58,15 +67,25 @@ const Dashboard = () => {
             <a href="/" className='px-3'>Trợ giúp</a>
           </div>
           </div>
-          <div className='user-info d-flex gap-2 align-items-center'>
-            <div className='user-avt'>
-              <img src={`http://localhost:5296/${user?.img}`} alt="avt" className='rounded-circle' onClick={handleLogout}/>
-            </div>
-            <div className='info d-flex flex-column align-items-center gap-1'>
-              <span className="name">{user?.name}</span>
-              <span className='job-title'>{user?.jobTitle}</span>
-            </div>
-          </div>
+          <Dropdown>
+            <Dropdown.Toggle >
+              <div className='user-info d-flex gap-2 align-items-center'>
+                <div className='user-avt'>
+                  <img src={`http://localhost:5296/${user?.img}`} alt="avt" className='rounded-circle'/>
+                </div>
+                <div className='info d-flex flex-column align-items-center gap-1'>
+                  <span className="name">{user?.name}</span>
+                  <span className='job-title'>{user?.jobTitle}</span>
+                </div>
+              </div>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item as={Link} to="/user">Hồ sơ</Dropdown.Item>
+              <Dropdown.Item onClick={handleLogout}>
+                Đăng xuất
+              </Dropdown.Item>
+              </Dropdown.Menu>
+          </Dropdown>
         </div>
         <div className='option-section d-flex justify-content-between align-items-center'>
           <div className='options d-flex gap-4'>
@@ -108,14 +127,14 @@ const Dashboard = () => {
             
             
             <div className="tab-pane fade" id="sharedpost">
-              <SharedPost/>
+            <SharedPost  handleShowPrevContainer={handleShowPrevContainer} />
             </div>
             
           </div>
           </div>
         </div>
         <div className='prev-bar mb-5'>
-          {showPostDetail && <PostDetail />}
+        {showPostDetail && <PostDetail postId={selectedPostID} />}
         </div>
       </div>
       
