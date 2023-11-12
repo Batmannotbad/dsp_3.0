@@ -67,7 +67,7 @@ const Dashboard = () => {
             <a href="/" className='px-3'>Trợ giúp</a>
           </div>
           </div>
-          <Dropdown>
+          <Dropdown className='d-flex'>
             <Dropdown.Toggle >
               <div className='user-info d-flex gap-2 align-items-center'>
                 <div className='user-avt'>

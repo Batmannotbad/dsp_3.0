@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { deleteBox, getBoxDetail } from '../APIController';
+import { deleteBox, getBoxDetail, getBoxShare } from '../APIController';
 import { useSelector } from 'react-redux';
 import ConfirmModal from './ConfirmModal';
 
@@ -9,40 +9,71 @@ const PostDetail = ({ postId }) => {
     const [postData, setPostData] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [isDeleted, setIsDeleted] = useState(false);
+    const [sharedUsers,setSharedUsers]= useState([]);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             console.log(postId);
+    //             const data = await getBoxDetail(token, postId);
+    //             setPostData(data);
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+    //     };
+    //     fetchData();
+    // }, [postId]);
+    // useEffect(() => {
+    //     const fetchSharedUser = async () => {
+    //         try {
+    //             const data = await getBoxShare(token,postId);
+    //             setSharedUsers(data);
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+    //     };
+    //     fetchSharedUser();
+    // },[postId]);
     useEffect(() => {
         const fetchData = async () => {
             try {
                 console.log(postId);
-                const data = await getBoxDetail(token, postId);
-                setPostData(data);
+                // Clear shared user data when fetching details for a new post
+                setSharedUsers([]);
+                
+                const boxDetailData = await getBoxDetail(token, postId);
+                setPostData(boxDetailData);
+    
+                const sharedUserData = await getBoxShare(token, postId);
+                setSharedUsers(sharedUserData);
             } catch (error) {
                 console.error(error);
             }
         };
+    
         fetchData();
-    }, [postId]);
+    }, [postId]);    
     useEffect(() => {
         console.log(postData);
     }, [postData]);
     const handleDeleteBox = () => {
         setShowModal(true);
       };
-      const confirmDelete = async () => {
-        try {
-          await deleteBox(token, postId);
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setIsDeleted(true);
-          setShowModal(false);
-          window.alert('Bài viết đã bị xóa');
-          window.location.reload();
-        }
-      };
-      
-      const handleCloseModal = () => {
+    const confirmDelete = async () => {
+    try {
+        await deleteBox(token, postId);
+    } catch (error) {
+        console.error(error);
+    } finally {
+        setIsDeleted(true);
         setShowModal(false);
-      };
+        window.alert('Bài viết đã bị xóa');
+        window.location.reload();
+    }
+    };
+      
+    const handleCloseModal = () => {
+    setShowModal(false);
+    };
 
   return (
     <div className='prev-container'>
@@ -94,48 +125,19 @@ const PostDetail = ({ postId }) => {
         <div className='rev-accessibility'>
         <h4 className='prev-header'> Người có quyền truy cập</h4>
         <div className='access-grid'>
-            <div className='accessible-users d-flex flex-column align-items-center gap-1'>
+            {sharedUsers.length > 0 ? (
+                sharedUsers.map((sharedUser)=> (
+            <div className='accessible-users d-flex flex-column align-items-center gap-1' key={(sharedUser.id)}>
                 <div className='user-details '>
-                <img src="https://i.pinimg.com/564x/5f/44/13/5f4413db521e4adc1cf237c4150c98dd.jpg" alt="user img" className='rounded-circle' />
+                <img src={`http://localhost:5296/${sharedUser.img}`} alt="user img" className='rounded-circle' />
                 </div>
-                <span className='accessible-user-name'>Marshall Lee</span>
-                <span className='user-role'>Edit</span>
+                <span className='accessible-user-name'>{sharedUser.name}</span>
+                <span className='user-role'>{sharedUser.editAccess ? 'Edit' : 'View'}</span>
             </div>
-            <div className='accessible-users d-flex flex-column align-items-center gap-1'>
-                <div className='user-details'>
-                <img src="https://i.pinimg.com/564x/0c/9b/de/0c9bde4d60babf9d980d2b3dc351ed8a.jpg" alt="user img" className='rounded-circle' />
-                </div>
-                <span className='accessible-user-name'>Gary Prince</span>
-                <span className='user-role'>Viewer</span>
-            </div>
-            <div className='accessible-users d-flex flex-column align-items-center gap-1'>
-                <div className='user-details'>
-                <img src="https://i.pinimg.com/564x/43/cb/5a/43cb5a5ba3a7f877d30a896ec0098cbe.jpg" alt="user img" className='rounded-circle' />
-                </div>
-                <span className='accessible-user-name'>Simon Petrikov</span>
-                <span className='user-role'>Viewer</span>
-            </div>
-            <div className='accessible-users d-flex flex-column align-items-center gap-1'>
-                <div className='user-details'>
-                <img src="https://i.pinimg.com/564x/43/cb/5a/43cb5a5ba3a7f877d30a896ec0098cbe.jpg" alt="user img" className='rounded-circle' />
-                </div>
-                <span className='accessible-user-name'>Simon Petrikov</span>
-                <span className='user-role'>Viewer</span>
-            </div>
-            <div className='accessible-users d-flex flex-column align-items-center gap-1'>
-                <div className='user-details'>
-                <img src="https://i.pinimg.com/564x/43/cb/5a/43cb5a5ba3a7f877d30a896ec0098cbe.jpg" alt="user img" className='rounded-circle' />
-                </div>
-                <span className='accessible-user-name'>Simon Petrikov</span>
-                <span className='user-role'>Viewer</span>
-            </div>
-            <div className='accessible-users d-flex flex-column align-items-center gap-1'>
-                <div className='user-details'>
-                <img src="https://i.pinimg.com/564x/43/cb/5a/43cb5a5ba3a7f877d30a896ec0098cbe.jpg" alt="user img" className='rounded-circle' />
-                </div>
-                <span className='accessible-user-name'>Simon Petrikov</span>
-                <span className='user-role'>Viewer</span>
-            </div>
+                ))
+            ):(
+                <p>Bìa viết chưa được chia sẻ</p>
+            )}
         </div>
         </div>
         <div className='post-edit d-flex mt-4 justify-content-evenly gap-5'>

@@ -251,3 +251,51 @@ export const userLogout = async (token) => {
     throw error;
   }
 };
+
+export const getBoxShare = async (token, boxId) => {
+  try {
+    const response = await fetch(`http://localhost:5296/api/BoxInteract/GetUserShareInBox?boxId=${boxId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error('Failed to get shared user in POst');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+
+export const putUserImg = async (token, image) => {
+  try {
+    const formData = new FormData();
+    formData.append('Img', image);//lỗi ở đây 
+
+    const response = await fetch(`http://localhost:5296/api/User/UpdateImgUser`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (response.ok) {
+      const data = await response.text();
+      console.log(data);
+      return data;
+    } else {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};

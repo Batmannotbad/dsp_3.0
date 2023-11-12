@@ -5,6 +5,8 @@ import Signup from './Pages/Signup/Signup';
 import Dashboard from './Pages/Dashboard/Dashboard';
 import { useSelector } from 'react-redux';
 import Test from './Test';
+import User from './Pages/User/User';
+import DataTable from './Component/DataTable';
 
 
 function App() {
@@ -16,6 +18,10 @@ function App() {
           <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/test" element={<Test />} />
+          <Route path="/user" element={<User />} />
+          <Route path="/table" element={<DataTable />} />
+
+
           <Route path='/' element={isLoggedIn ? <Dashboard/> : <Navigate to="/login" />} />
         </Routes>
       </div>
