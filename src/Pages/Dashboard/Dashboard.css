@@ -32,6 +32,8 @@
 }
 .user-avt img{
     width: 50px;
+    height: 50px;
+    object-fit: cover;
     border: 2px solid var(--light-yellow);
 }
 .link-nav a{

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { deleteBox, getBoxDetail, getBoxShare } from '../APIController';
+import { deleteBox, getBoxDetail, getBoxFiles, getBoxShare } from '../APIController';
 import { useSelector } from 'react-redux';
 import ConfirmModal from './ConfirmModal';
 
@@ -10,41 +10,23 @@ const PostDetail = ({ postId }) => {
     const [showModal, setShowModal] = useState(false);
     const [isDeleted, setIsDeleted] = useState(false);
     const [sharedUsers,setSharedUsers]= useState([]);
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             console.log(postId);
-    //             const data = await getBoxDetail(token, postId);
-    //             setPostData(data);
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     };
-    //     fetchData();
-    // }, [postId]);
-    // useEffect(() => {
-    //     const fetchSharedUser = async () => {
-    //         try {
-    //             const data = await getBoxShare(token,postId);
-    //             setSharedUsers(data);
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     };
-    //     fetchSharedUser();
-    // },[postId]);
+    const [postFiles, setPostFiles] = useState([]);
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
                 console.log(postId);
-                // Clear shared user data when fetching details for a new post
                 setSharedUsers([]);
-                
+                setPostFiles([]);
                 const boxDetailData = await getBoxDetail(token, postId);
                 setPostData(boxDetailData);
     
                 const sharedUserData = await getBoxShare(token, postId);
                 setSharedUsers(sharedUserData);
+
+                const postFilesList = await getBoxFiles(token,postId);
+                setPostFiles(postFilesList);
+                console.log(postFilesList);
             } catch (error) {
                 console.error(error);
             }
@@ -106,20 +88,18 @@ const PostDetail = ({ postId }) => {
             {postData&& <p>{postData.content}</p>}
         </div>
         <div className='prev-files'>
-            <h4 className='file-count prev-header'> 3 tệp tin</h4>
+            <h4 className='file-count prev-header'> {postFiles.length} tệp tin</h4>
             <div className='file-list'>
-            <div className='file-item d-flex flex-column align-items-center'>
-                <img src="./img/DOCX.png" alt="DOCX" />
-                <a href="/" title="Báo cáo thống kê số lượng tỉnh thành sử dụng VNForm trên Cổng Dịch vụ Công trực tuyến">Báo cáo thống kê số lượng tỉnh thành sử dụng VNForm trên Cổng Dịch vụ Công trực tuyến</a>
-            </div>
-            <div className='file-item d-flex flex-column align-items-center'>
-                <img src="./img/XSL.png" alt="XSL" />
-                <a href="/" title="Báo cáo thống kê số lượng tỉnh thành sử dụng VNForm trên Cổng Dịch vụ Công trực tuyến">Báo cáo thống kê số lượng tỉnh thành sử dụng VNForm trên Cổng Dịch vụ Công trực tuyến</a>
-            </div>
-            <div className='file-item d-flex flex-column align-items-center'>
-                <img src="./img/PDF.png" alt="PDF" />
-                <a href="/" title="Báo cáo thống kê số lượng tỉnh thành sử dụng VNForm trên Cổng Dịch vụ Công trực tuyến">Báo cáo thống kê số lượng tỉnh thành sử dụng VNForm trên Cổng Dịch vụ Công trực tuyến</a>               
-                </div>
+                {postFiles.length>0?(
+                    postFiles.map((file)=> (
+                        <div className='file-item d-flex flex-column align-items-center' key={(file.id)}>
+                            {/* <img src={getFileIcon(file.extension)} alt={file.extension.toUpperCase()} /> */}
+                            <a href="/" title={file.name}>{file.name}</a>
+                        </div>
+                    ))
+                ):(
+                    <p>Bài viết chưa có tài liệu nào</p>
+                )}
             </div>
         </div>
         <div className='rev-accessibility'>

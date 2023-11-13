@@ -299,3 +299,53 @@ export const putUserImg = async (token, image) => {
     throw error;
   }
 };
+
+export const updateUserInformation = async (token,username,jobTitle,description) => {
+  try {
+    const formData = new FormData();
+    formData.append('Name',username);
+    formData.append('Jobtitle', jobTitle);
+    formData.append('description', description);
+
+    const response = await fetch('http://localhost:5296/api/User/UpdateUserInfor',{
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+    },
+    body: formData,
+  });
+    if (response.ok) {
+      const data = await response.text();
+      console.log(data);
+      return data;
+    } else {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+
+//Get Box Files
+export const getBoxFiles = async(token,boxId)  => {
+  try {
+    const response = await fetch(`http://localhost:5296/api/Box/GetListFileInBox?boxId=${boxId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};

@@ -7,6 +7,7 @@ const PostGrid = ({handleShowPrevContainer}) => {
   const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
   const token = useSelector((state) => state.user.token);
+  const MAX_TITLE_LENGTH = 20;
 
   useEffect(() => {
     const fetchBoxsCurrentUser = async () => {
@@ -31,7 +32,6 @@ const PostGrid = ({handleShowPrevContainer}) => {
         {posts.length > 0 ? (
           posts.map((post) => (
             <div className='post-container' key={post.id}>
-              {/* <div className='post-detail' onClick={postClick}> */}
               <div className='post-detail' onClick={() => postClick(post.id)}>
                 <div className='border-bottom-thick'>
                   <div className='post-banner-icon d-flex justify-content-between'>
@@ -42,7 +42,7 @@ const PostGrid = ({handleShowPrevContainer}) => {
                   </div>
                   <div className='container-post-title'>
                     <div className='post-title-sbox'>
-                      <h5>{post.title}</h5>
+                    <h5>{post.title.length > MAX_TITLE_LENGTH ? `${post.title.slice(0, MAX_TITLE_LENGTH)}...` : post.title}</h5>
                     </div>
                     <div className='date-created-sbox'>
                       <span>{post.dateCreated.split('T')[0]}</span>
