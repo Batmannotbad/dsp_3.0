@@ -5,6 +5,8 @@ import './CreateNew.css';
 import { useSelector } from 'react-redux';
 import { createBox } from '../../APIController';
 import { Alert } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';  
+
 
 const CreateNew = ({ show, handleClose }) => {
   const [title, setTitle] = useState('');
@@ -13,25 +15,56 @@ const CreateNew = ({ show, handleClose }) => {
   const [image, setImage] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [response, setResponse] = useState(null);
+  const [sharedStatus,setsharedStatus] = useState(false);
   const token = useSelector(state => state.user.token);
+
+  const handleResetForm = () => {
+    setTitle('');
+    setContent('');
+    setFile([]);
+    setImage(null);
+    setShowAlert(false);
+    setResponse(null);
+    setsharedStatus(false);
+  };
+  
 
   
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     try {
-      const response = await createBox(token,title, content, file, image);
-      console.log(response);
-      setResponse(response);
-      setShowAlert(true);
-
+      const isSuccess = await createBox(token, title, content, file, image, sharedStatus);
+  
+      if (isSuccess) {
+        setResponse('Tạo mới thành công!');
+        setShowAlert(true);
+      } else {
+        console.error('Tạo mới không thành công!'); 
+        setResponse('Tạo mới không thành công!');
+        setShowAlert(true);
+      }
     } catch (error) {
       console.error(error);
-      
-
     }
   };
-  
+
+  const handleFileChange = (e, index) => {
+    const newFiles = Array.from(e.target.files);
+    const updatedFiles = [...file];
+    updatedFiles[index] = newFiles[0];
+    setFile(updatedFiles);
+  };
+
+  const handleRemoveFile = (index) => {
+    const updatedFiles = [...file];
+    updatedFiles.splice(index, 1);
+    setFile(updatedFiles);
+  };
+  const handleAddFileInput = () => {
+    setFile([...file, null]);
+  };
+
   return (
     <Modal show={show} onHide={handleClose} centered size="lg" className='modal-custom'>
       <Modal.Header closeButton>
@@ -67,28 +100,49 @@ const CreateNew = ({ show, handleClose }) => {
             placeholder='Nhập nội dung bài viết ở đây'
             onChange={e => setContent(e.target.value)}
              />
-
-         
-          <label className="">
-            <input 
-              type="file" 
-              id="documents" 
-              accept="*/*" 
-              multiple 
-              onChange={e => setFile(Array.from(e.target.files))}/>
-          </label>
-          <div>
+            <div className='d-flex flex-column gap-3'>
+            <span>Chọn tệp</span>
             {file.map((file, index) => (
-              <p key={index}>{file.name}</p>
-            ))}
+            <div key={index}>
+              <label htmlFor={`fileInput-${index}`} className="">
+                <input
+                  type="file"
+                  id={`fileInput-${index}`}
+                  accept="*/*"
+                  onChange={(e) => handleFileChange(e, index)}
+                />
+              </label>
+              {file && (
+                <div className="d-flex align-items-center">
+                  <p className="me-2">{file.name}</p>
+                  <Button variant="danger" size="sm" onClick={() => handleRemoveFile(index)}>
+                    Xóa
+                  </Button>
+                </div>
+              )}
+            </div>
+          ))}</div>
+            <button className='btn-add-file' onClick={handleAddFileInput}>
+              Thêm tệp
+            </button>
+          <div className='d-flex flex-column gap-1'>
+              <Form.Check
+                type="checkbox"
+                label="Chia sẻ"
+                checked={sharedStatus}
+                onChange={() => setsharedStatus(!sharedStatus)}
+              />
           </div>
         </div>
-        <button type="submit">Tạo mới</button>
+        <div className='d-flex justify-content-end pe-5'>
+        <button type="submit" className='btn-add'>Tạo mới</button>
+        </div>
         </form>
       </Modal.Body>
       <Modal.Footer>
       <Button variant="secondary" onClick={() => {
         handleClose(); 
+        handleResetForm();
         window.location.reload(); 
       }}>
           Đóng
@@ -97,11 +151,11 @@ const CreateNew = ({ show, handleClose }) => {
       </Modal.Footer>
       {showAlert && (
         <Alert
-          variant={response === "1. Create successfully" ? "success" : "danger"}
+          variant={response === "Tạo mới thành công!" ? "success" : "danger"}
           onClose={() => setShowAlert(false)}
           dismissible
         >
-          {response === "1. Create successfully" ? "Tạo mới thành công!" : "Tạo mới không thành công!"}
+          {response}
         </Alert>
       )}
             

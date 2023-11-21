@@ -148,3 +148,45 @@
     font-size: 16px;
     resize: none;
   }
+  .text-content::-webkit-scrollbar {
+    width: 12px;
+  }
+  .modal-body::-webkit-scrollbar{
+    width: 12px;
+  }
+  .form-check {
+    display: flex;
+    align-items: center;
+    gap:10px
+  }
+  .form-check-input[type=checkbox]{
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+  }
+  .form-check-label{
+    font-family: Be Vietnam Pro;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .btn-add{
+    background-color: var(--red-base);
+    font-family: Be Vietnam Pro;
+    padding: 1rem;
+    max-width: fit-content;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--light-yellow);
+
+  }
+  .btn-add-file{
+    padding: 0.5rem;    
+    background-color: var(--golden);
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-family: Be Vietnam Pro;
+    font-size: 16px;
+    letter-spacing: 1px;
+  }

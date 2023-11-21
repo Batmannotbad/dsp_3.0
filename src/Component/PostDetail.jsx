@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { deleteBox, getBoxDetail, getBoxFiles, getBoxShare } from '../APIController';
 import { useSelector } from 'react-redux';
 import ConfirmModal from './ConfirmModal';
+import { FileIcon, defaultStyles } from 'react-file-icon';
+import UpdateModal from './UpdateModal';
+
 
 const PostDetail = ({ postId }) => {
     const token = useSelector(state => state.user.token);
@@ -11,7 +14,9 @@ const PostDetail = ({ postId }) => {
     const [isDeleted, setIsDeleted] = useState(false);
     const [sharedUsers,setSharedUsers]= useState([]);
     const [postFiles, setPostFiles] = useState([]);
-    
+    const [showUpdateModal, setShowUpdateModal] = useState(false);
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -56,6 +61,21 @@ const PostDetail = ({ postId }) => {
     const handleCloseModal = () => {
     setShowModal(false);
     };
+    const getFileExtension = (fileName) => {
+        const lastDotIndex = fileName.lastIndexOf('.');
+        if (lastDotIndex !== -1) {
+            return fileName.substring(lastDotIndex + 1);
+        }
+        return 'txt';
+    };
+    
+      const handleEditClick = () => {
+        setShowUpdateModal(true);
+      };
+    
+      const handleCloseUpdateModal = () => {
+        setShowUpdateModal(false);
+      };
 
   return (
     <div className='prev-container'>
@@ -92,8 +112,10 @@ const PostDetail = ({ postId }) => {
             <div className='file-list'>
                 {postFiles.length>0?(
                     postFiles.map((file)=> (
-                        <div className='file-item d-flex flex-column align-items-center' key={(file.id)}>
-                            {/* <img src={getFileIcon(file.extension)} alt={file.extension.toUpperCase()} /> */}
+                        <div className='file-item d-flex flex-column align-items-center gap-3' key={(file.id)}>
+                            <div style={{ width: '48px', height: '48px', color: 'red' }}>
+                                <FileIcon color='#f3e0e0' extension={getFileExtension(file.name)} {...defaultStyles} />
+                            </div>
                             <a href="/" title={file.name}>{file.name}</a>
                         </div>
                     ))
@@ -116,14 +138,19 @@ const PostDetail = ({ postId }) => {
             </div>
                 ))
             ):(
-                <p>Bìa viết chưa được chia sẻ</p>
+                <p>Bài viết chưa được chia sẻ</p>
             )}
         </div>
         </div>
         <div className='post-edit d-flex mt-4 justify-content-evenly gap-5'>
             <button className='post-edit-btn share-btn'>Chia sẻ</button>
-            <button className='edit-btn post-edit-btn'>Chỉnh sửa</button>
+            <button className='edit-btn post-edit-btn'onClick={handleEditClick}>Chỉnh sửa</button>
         </div>
+        <UpdateModal
+        show={showUpdateModal}
+        handleClose={handleCloseUpdateModal}
+        postId={postId}
+      />
     </div>
   )
 }

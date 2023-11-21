@@ -311,5 +311,13 @@ button.dropdown-toggle.btn.btn-primary:focus{
   border: none;
   box-shadow: none;
 }
+.update-banner{
+max-width: 100%;
+height: 300px;
+border-radius: 10px;
+margin-bottom: 2rem;
+object-fit: cover;
+}
+
 
   

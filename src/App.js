@@ -7,6 +7,8 @@ import { useSelector } from 'react-redux';
 import Test from './Test';
 import User from './Pages/User/User';
 import DataTable from './Component/DataTable';
+import UserList from './Component/UserList';
+import ViewChart from './Component/ViewChart';
 
 
 function App() {
@@ -20,8 +22,8 @@ function App() {
           <Route path="/test" element={<Test />} />
           <Route path="/user" element={<User />} />
           <Route path="/table" element={<DataTable />} />
-
-
+          <Route path='/userlist' element={<UserList/>}/>
+          <Route path='/viewchart' element={<ViewChart/>}/>
           <Route path='/' element={isLoggedIn ? <Dashboard/> : <Navigate to="/login" />} />
         </Routes>
       </div>

@@ -17,7 +17,6 @@ const User = () => {
     const [name, setName] = useState(user?.name || '');
     const [jobTitle, setJobTitle] = useState(user?.jobTitle || '');
     const [description, setDescription] = useState(user?.description || '');
-    const inputRef = useRef(null);
     const MAX_FILE_NAME_LENGTH = 20;
 
     const handleClickChangeImage = () => {

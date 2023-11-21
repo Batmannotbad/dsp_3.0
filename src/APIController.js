@@ -31,7 +31,6 @@ export const loginAndGetToken = async (username, password) => {
 
     if (response.ok) {
       const data = await response.text();
-    //   console.log("Đăng nhập bằng token thành công");
       return data;
     } else {
       throw new Error('Failed to login by token');
@@ -132,27 +131,27 @@ export const getCurrentUser = async (token) => {
     }
   };
   // Tạo Post
-  export const createBox = async (token, title, content, file, img) => {
+export const createBox = async (token, title, content, file, img, sharedStatus) => {
   try {
     const formData = new FormData();
     formData.append('Title', title);
+
     if (content) {
       formData.append('Content', content);
     }
-    
+
     if (img) {
       formData.append('Img', img);
     }
-    
+
     if (file.length > 0) {
       const filesArray = Array.isArray(file) ? file : Array.from(file);
       filesArray.forEach((file, i) => {
         formData.append('Files', file, file.name);
       });
-      for (let pair of formData.entries()) {
-        console.log(pair[0]+ ', ' + pair[1]); 
-      }
     }
+
+    formData.append('SharedStatus', sharedStatus);
 
     const response = await fetch('http://localhost:5296/api/Box/CreateBox', {
       method: 'POST',
@@ -163,15 +162,16 @@ export const getCurrentUser = async (token) => {
     });
 
     if (response.ok) {
-      const data = await response.text();
-      console.log(data);
-      return data;
-    } 
+      return true;
+    } else {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
   } catch (error) {
     console.error('Error:', error);
     throw error;
   }
 };
+
 
 //Lấy thông tin chi tiết của Post
 export const getBoxDetail = async (token, boxId) => {
@@ -331,6 +331,85 @@ export const updateUserInformation = async (token,username,jobTitle,description)
 export const getBoxFiles = async(token,boxId)  => {
   try {
     const response = await fetch(`http://localhost:5296/api/Box/GetListFileInBox?boxId=${boxId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+
+
+export const updatePost = async(token,boxId, title, content, sharedStatus, img) => {
+  try {
+    const formData = new FormData();
+    formData.append('Title', title);
+    formData.append('Content', content);
+    formData.append('SharedStatus', sharedStatus);
+    if (img) {
+      formData.append('Img', img);
+    }
+    for (var pair of formData.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]); 
+    }
+    const response = await fetch(`http://localhost:5296/api/Box/UpdateBox?Id=${boxId}`,{
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+    },
+    body: formData,
+      });
+      if (response.ok) {
+        const data = await response.text();
+        console.log(data);
+        return data;
+      } else {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  
+    
+
+}
+export const getAllBoxs = async(token)  => {
+  try {
+    const response = await fetch(`http://localhost:5296/api/Admin/GetALLBox`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+
+export const getUserList = async(token)  => {
+  try {
+    const response = await fetch(`http://localhost:5296/api/Admin/GetListUser`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
