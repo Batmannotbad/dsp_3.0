@@ -32,12 +32,21 @@ const UserList = () => {
       ),
     },
     { field: 'username', headerName: 'Username', width: 150 },
-    { field: 'banEnabled', headerName: 'Khóa', width: 120 },
+    {
+        field: 'banEnabled',
+        headerName: 'Trạng thái',
+        width: 130,
+        renderCell: (params) => (
+          <div style={{ color: params.value ? 'red' : 'green' }}>
+            {params.value ? 'Khóa' : 'Hoạt động'}
+          </div>
+        ),
+      },
     { field: 'description', headerName: 'Mô tả', width: 170 },
     { field: 'jobTitle', headerName: 'Chức vụ', width: 130 },
     { field: 'name', headerName: 'Họ tên', width: 180 },
-    { field: 'email', headerName: 'Email', width: 180 },
   ];
+  
   return (
     <div>
       <DataGrid

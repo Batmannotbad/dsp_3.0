@@ -41,12 +41,66 @@ function Test() {
       ),
     },
     { field: 'username', headerName: 'Username', width: 150 },
-    { field: 'banEnabled', headerName: 'Khóa', width: 120 },
+    {
+      field: 'banEnabled',
+      headerName: 'Ban Enabled',
+      width: 130,
+      renderCell: (params) => (
+        <div style={{ color: params.value ? 'red' : 'green' }}>
+          {params.value ? 'Khóa' : 'Hoạt động'}
+        </div>
+      ),
+    },
     { field: 'description', headerName: 'Mô tả', width: 170 },
-    // { field: 'img', headerName: 'Ảnh đại diện', width: 130 },
     { field: 'jobTitle', headerName: 'Chức vụ', width: 130 },
     { field: 'name', headerName: 'Họ tên', width: 180 },
     { field: 'email', headerName: 'Email', width: 180 },
+  ];
+  const postColumns = [
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'title', headerName: 'Title', width: 200 },
+    { field: 'content', headerName: 'Content', width: 200 },
+    { field: 'userId', headerName: 'User ID', width: 130 },
+    {
+      field: 'dateCreated',
+      headerName: 'Date Created',
+      width: 200,
+      type: 'dateTime',
+      valueGetter: (params) => new Date(params.row.dateCreated),
+    },
+    { field: 'view', headerName: 'View', width: 130 },
+    {
+      field: 'img',
+      headerName: 'Image',
+      width: 200,
+      renderCell: (params) => (
+        <img
+          src={`http://localhost:5296/${params.value}`}
+          alt="Image"
+          style={{ width: 50, height: 50 }}
+        />
+      ),
+    },
+    {
+      field: 'adminBan',
+      headerName: 'Admin Ban',
+      width: 130,
+      renderCell: (params) => (
+        <div style={{ color: params.value ? 'red' : 'green' }}>
+          {params.value ? 'Khóa' : 'Hoạt động'}
+        </div>
+      ),
+    },
+    {
+      field: 'sharedStatus',
+      headerName: 'Shared Status',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ color: params.value ? 'green' : 'red' }}>
+          {params.value ? 'Chia sẻ' : 'Không chia sẻ'}
+        </div>
+      ),
+    },
   ];
   return (
     <div>
@@ -62,13 +116,18 @@ function Test() {
         <Bar dataKey="view" stackId="a" fill="#8884d8" />
       </BarChart>
     </div>
-    <div style={{ height: 400, width: '80%' }}>
+    <div className='mb-4'>
+      <h2>UserList</h2>
       <DataGrid
         rows={userList}
         getRowId = {(userList) => userList?.id}
         disableSelectionOnClick
         columns={columns} pageSize={10}
          />
+    </div>
+    <div >
+      <h2>PostList</h2>
+      <DataGrid rows={chartData} columns={postColumns} pageSize={5} />
     </div>
   </div>
   )
