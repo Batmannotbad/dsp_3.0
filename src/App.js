@@ -9,10 +9,13 @@ import User from './Pages/User/User';
 import DataTable from './Component/DataTable';
 import UserList from './Component/UserList';
 import ViewChart from './Component/ViewChart';
+import PostView from './Pages/PostView/Postv';
+import Test2 from './Test2';
 
 
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
   return (
     <Router>
       <div className="App">
@@ -24,6 +27,9 @@ function App() {
           <Route path="/table" element={<DataTable />} />
           <Route path='/userlist' element={<UserList/>}/>
           <Route path='/viewchart' element={<ViewChart/>}/>
+          <Route path='/test2' element={<Test2/>}/>
+
+          <Route path="/post/:url" element={<PostView/>} exact />
           <Route path='/' element={isLoggedIn ? <Dashboard/> : <Navigate to="/login" />} />
         </Routes>
       </div>

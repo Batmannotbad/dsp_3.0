@@ -4,18 +4,19 @@ import { useSelector } from 'react-redux';
 import ConfirmModal from './ConfirmModal';
 import { FileIcon, defaultStyles } from 'react-file-icon';
 import UpdateModal from './UpdateModal';
+import { Link } from 'react-router-dom';
+import { getFileExtension } from '../functions';
 
 
 const PostDetail = ({ postId }) => {
     const token = useSelector(state => state.user.token);
-    const selectedPostId = useSelector(state => state.post.selectedPostID);
+    // const selectedPostId = useSelector(state => state.post.selectedPostID);
     const [postData, setPostData] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [isDeleted, setIsDeleted] = useState(false);
     const [sharedUsers,setSharedUsers]= useState([]);
     const [postFiles, setPostFiles] = useState([]);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -61,13 +62,7 @@ const PostDetail = ({ postId }) => {
     const handleCloseModal = () => {
     setShowModal(false);
     };
-    const getFileExtension = (fileName) => {
-        const lastDotIndex = fileName.lastIndexOf('.');
-        if (lastDotIndex !== -1) {
-            return fileName.substring(lastDotIndex + 1);
-        }
-        return 'txt';
-    };
+    
     
       const handleEditClick = () => {
         setShowUpdateModal(true);
@@ -94,10 +89,14 @@ const PostDetail = ({ postId }) => {
             handleClose={handleCloseModal}
             handleConfirm={confirmDelete}
             />
-            
-            <button className='control-btn'>
-            <img src="./img/detailsbtn.png" alt="detailsbtn" />
-            </button>
+            {postData && postData.url && (
+                <Link to={`/post/${postData.url}`}>
+                    <button className='control-btn'>
+                    <img src="./img/detailsbtn.png" alt="detailsbtn" />
+                    </button>
+                </Link>
+                )}
+
 
         </div>
         <div className='prev-post-title'>

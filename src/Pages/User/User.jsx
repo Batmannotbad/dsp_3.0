@@ -107,8 +107,6 @@ const User = () => {
       }
     };
   
-    
-      
   return (
     <div className='user-page'>
         <Header/>
@@ -249,7 +247,6 @@ const User = () => {
                         Bài viết của tôi
                         </div>
                     <DataTable/>
-
                 </div>
 
             </div>

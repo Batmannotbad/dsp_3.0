@@ -428,3 +428,126 @@ export const getUserList = async(token)  => {
     throw error;
   }
 };
+export const downloadAllFiles = async (token,boxId) => {
+  try {
+    const response = await fetch(`http://localhost:5296/api/Box/DowloadAllFile?boxId=${boxId}`,{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      const blobData = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blobData);
+      return downloadUrl;
+
+    } else {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+
+// export const downloadFile = async (token,boxId,fileName) => {
+//   try {
+//     const response = await fetch(`http://localhost:5296/api/Box/DowloadFile?boxId=${boxId}&fileName=${fileName}`,{
+//       method: 'GET',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${token}`
+//       }
+//     });
+
+//     if (response.ok) {
+//       const blobData = await response.blob();
+//       const downloadUrl = window.URL.createObjectURL(blobData);
+//       return downloadUrl;
+
+//     } else {
+//       throw new Error(`HTTP error! Status: ${response.status}`);
+//     }
+//   } catch (error) {
+//     console.error('Error:', error);
+//     throw error;
+//   }
+// };
+// export const downloadFile = async (token, boxId, fileName) => {
+//   try {
+//     const response = await fetch(
+//       `http://localhost:5296/api/Box/DowloadFile?boxId=${boxId}&fileName=${fileName}`,
+//       {
+//         method: 'GET',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Authorization': `Bearer ${token}`
+//         }
+//       }
+//     );
+
+//     if (response.ok) {
+//       const contentDisposition = response.headers.get('Content-Disposition');
+//       const match = contentDisposition && contentDisposition.match(/filename="(.+?)"/);
+//       const suggestedFileName = match && match[1];
+
+//       const sanitizedFileName = suggestedFileName || fileName;
+
+//       const blobData = await response.blob();
+
+//       const downloadUrl = window.URL.createObjectURL(blobData);
+
+//       return { downloadUrl, fileName: sanitizedFileName };
+//     } else {
+//       throw new Error(`HTTP error! Status: ${response.status}`);
+//     }
+//   } catch (error) {
+//     console.error('Error:', error);
+//     throw error;
+//   }
+// };
+export const downloadFile = async (token, boxId, fileName) => {
+  try {
+    const response = await fetch(
+      `http://localhost:5296/api/Box/DowloadFile?boxId=${boxId}&fileName=${fileName}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+
+    if (response.ok) {
+      let suggestedFileName = fileName; 
+
+      const contentDisposition = response.headers.get('Content-Disposition');
+      console.log('Content-Disposition Header:', contentDisposition);
+
+      if (contentDisposition) {
+        const match = contentDisposition.match(/filename="(.+?)"/);
+        suggestedFileName = match ? match[1] : suggestedFileName;
+      }
+
+      const sanitizedFileName = suggestedFileName.trim();
+
+      console.log('Suggested File Name:', sanitizedFileName);
+
+      const blobData = await response.blob();
+
+      const downloadUrl = window.URL.createObjectURL(blobData);
+      console.log(fileName);
+
+      return { downloadUrl, fileName: sanitizedFileName };
+    } else {
+      throw new Error(`Lỗi HTTP! Trạng thái: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Lỗi:', error);
+    throw error;
+  }
+};
+

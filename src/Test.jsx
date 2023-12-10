@@ -6,6 +6,7 @@ import { DataGrid } from '@mui/x-data-grid';
 function Test() {
   const [chartData, setChartData] = useState([]);
   const token = useSelector(state => state.user.token);
+  
   const [userList,setUserList] = useState([]);
   useEffect(() => {
 
@@ -121,13 +122,32 @@ function Test() {
       <DataGrid
         rows={userList}
         getRowId = {(userList) => userList?.id}
-        disableSelectionOnClick
+        // disableSelectionOnClick
         columns={columns} pageSize={10}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5 },
+          },
+        }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
          />
     </div>
-    <div >
-      <h2>PostList</h2>
-      <DataGrid rows={chartData} columns={postColumns} pageSize={5} />
+    <div  >
+      <h2 >PostList</h2>
+      <div style={{height:400}}>
+        <DataGrid 
+        rows={chartData} 
+        columns={postColumns} 
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5 },
+          },
+        }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        />
+        </div>
     </div>
   </div>
   )
