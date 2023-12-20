@@ -73,8 +73,7 @@ function AdminPost() {
     <div style={{ padding: "100px 60px", backgroundColor: "rgba(0,0,0,0.05)" }}>
     <Header/>
     <div  >
-      <h2 >PostList</h2>
-      <div style={{height:400}}>
+      <div style={{height:400, backgroundColor: "white"}}>
         <DataGrid 
         rows={postList} 
         columns={postColumns} 

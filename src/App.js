@@ -15,6 +15,7 @@ import AdminHome from './Pages/AdminHome/AdminHome';
 import Error from './Pages/Error/Error';
 import AdminUser from './Pages/AdminUserControl/AdminUser';
 import AdminPost from './Pages/AdminPostControl/AdminPost';
+import AdminAddAccount from './Pages/AdminUserControl/AdminAddAccount';
 
 
 function App() {
@@ -44,6 +45,12 @@ function App() {
           )}
           {userRole && userRole.role === 'Admin' ? (
             <Route path="/admin/post" element={<AdminPost />} />
+            
+          ) : (
+            <Route path="/admin/user" element={<Navigate to="/error" />} />
+          )}
+          {userRole && userRole.role === 'Admin' ? (
+            <Route path="/admin/add" element={<AdminAddAccount />} />
             
           ) : (
             <Route path="/admin/user" element={<Navigate to="/error" />} />

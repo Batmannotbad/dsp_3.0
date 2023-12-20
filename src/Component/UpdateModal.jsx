@@ -72,9 +72,10 @@ const UpdateModal = ({show,handleClose}) => {
                 setPostFiles([]);
                 const boxDetailData = await getBoxDetail(token, postID);
                 setPostData(boxDetailData);
+                console.log(postData);
     
-                const sharedUserData = await getBoxShare(token, postID);
-                setSharedUsers(sharedUserData);
+                // const sharedUserData = await getBoxShare(token, postID);
+                // setSharedUsers(sharedUserData);
 
                 const postFilesList = await getBoxFiles(token,postID);
                 setPostFiles(postFilesList);

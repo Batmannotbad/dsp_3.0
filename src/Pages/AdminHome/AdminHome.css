@@ -71,5 +71,24 @@
     font-weight: 700;
     line-height: normal;
   }
-
+.add-acc-form{
+  max-width: 70%;
+}
+.add-acc-btn{
+  background-color:rgb(86, 159, 255);
+  font-family: Be Vietnam Pro;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    border:none;
+    border-radius: 8px;
+    padding: 10px;
+    max-width: fit-content;
+  
+}
+.btn-ban{
+  background-color: rgb(252, 138, 138);
+  border: none;
+}
   

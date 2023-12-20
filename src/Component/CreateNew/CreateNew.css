@@ -193,3 +193,7 @@
   .delete-btn{
     background-color: red;
   }
+  .sidebarTitle{
+    text-decoration: none;
+    color: #111;
+  }

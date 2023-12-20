@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { deleteBox, getBoxDetail, getBoxFiles, getBoxShare } from '../APIController';
+import { deleteBox, getBoxDetail, getBoxFiles, getBoxShare, removeBoxShare } from '../APIController';
 import { useSelector } from 'react-redux';
 import ConfirmModal from './ConfirmModal';
 import { FileIcon, defaultStyles } from 'react-file-icon';
@@ -32,6 +32,7 @@ const PostDetail = ({ postId }) => {
     
                 const sharedUserData = await getBoxShare(token, postId);
                 setSharedUsers(sharedUserData);
+                console.log(sharedUsers);
 
                 const postFilesList = await getBoxFiles(token,postId);
                 setPostFiles(postFilesList);
@@ -80,6 +81,15 @@ const PostDetail = ({ postId }) => {
       const closeShareModal = () => {
         setShowShareModal(false);
       }
+      const handleRemoveShare = async (userName) => {
+        try {
+          await removeBoxShare(postId, userName, token);
+          window.location.reload();
+        } catch (error) {
+          console.error('Error removing box share:', error);
+        }
+      };
+    
   return (
     <div className='prev-container'>
         <div className='post-banner-prev'>
@@ -142,6 +152,7 @@ const PostDetail = ({ postId }) => {
                 </div>
                 <span className='accessible-user-name'>{sharedUser.name}</span>
                 <span className='user-role'>{sharedUser.editAccess ? 'Edit' : 'View'}</span>
+                <button className='remove-btn' onClick={() => handleRemoveShare(sharedUser.username)}>Xóa</button>
             </div>
                 ))
             ):(

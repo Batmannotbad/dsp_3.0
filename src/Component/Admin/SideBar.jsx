@@ -5,7 +5,9 @@ import { Link } from "react-router-dom";
 const SideBar = () => {
   return (
     <div style={{ height: 'auto', width: '100px' }}>
-    <h3 className="sidebarTitle" style={{ fontWeight: 1000, fontSize: "2rem", paddingBottom: 20 }}>DSP</h3>
+    <Link to="/" className='sidebarTitle'>
+        <h3 className="" style={{ fontWeight: 1000, fontSize: "2rem", paddingBottom: 20 }}>DSP</h3>
+    </Link>
     <ul style={{ listStyleType: "none", padding: "15px", height: "auto" }}>
         <Link to="/admin/home" className="link">
             <li style={{paddingBottom:"40px"}}>

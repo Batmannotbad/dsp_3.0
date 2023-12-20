@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import SideBar from '../../Component/Admin/SideBar'
 import Header from '../../Component/Admin/Header'
 import { useSelector } from 'react-redux';
-import { getUserList } from '../../APIController';
+import { banUser, getUserList } from '../../APIController';
 import { DataGrid } from '@mui/x-data-grid';
+import { Link } from 'react-router-dom';
 
 function AdminUser() {
     const token = useSelector(state => state.user.token);
@@ -21,6 +22,16 @@ function AdminUser() {
     
         fetchData();
       }, []);
+      const handleBanUser = async (userId, banEnabled) => {
+        try {
+          await banUser(userId, token);
+          const updatedUserList = await getUserList(token);
+          setUserList(updatedUserList);
+        } catch (error) {
+          console.error('Error banning/unlocking user:', error);
+        }
+      };
+    
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
         {
@@ -42,7 +53,15 @@ function AdminUser() {
           width: 130,
           renderCell: (params) => (
             <div style={{ color: params.value ? 'red' : 'green' }}>
+              <div>
               {params.value ? 'Khóa' : 'Hoạt động'}
+              </div>
+              <button
+                onClick={() => handleBanUser(params.row.id, !params.value)}
+                className="btn-ban"
+              >
+                {params.value ? 'Mở khóa' : 'Khóa'}
+              </button>
             </div>
           ),
         },
@@ -56,7 +75,13 @@ function AdminUser() {
         <SideBar/>
         <div style={{ padding: "100px 60px", backgroundColor: "rgba(0,0,0,0.05)" }}>
         <Header/>
-        <div className='mb-4' style={{backgroundColor: "rgba(0,0,0,0)"}}>
+        <Link to="/admin/add" className="link">
+            <button className='btn-add-post mb-3'>
+              Thêm người dùng
+            </button>
+        </Link>
+        <div className='mb-4' style={{backgroundColor: "white"}}>
+        
             <DataGrid
                 rows={userList}
                 getRowId = {(userList) => userList?.id}

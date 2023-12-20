@@ -345,7 +345,7 @@ export const getBoxFiles = async(token,boxId)  => {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Failed to get file:', error);
     throw error;
   }
 };
@@ -402,7 +402,7 @@ export const getAllBoxs = async(token)  => {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error('fail to get file:', error);
     throw error;
   }
 };
@@ -536,7 +536,7 @@ export const getAllBoxes = async (token) => {
       const data = await response.json();
       return data;
     } else {
-      throw new Error(`Failed to fetch data. Status: ${response.status}`);
+      throw new Error(`Failed to fetch file. Status: ${response.status}`);
     }
   } catch (error) {
     console.error('Error:', error);
@@ -619,5 +619,82 @@ export const uploadFile = async (token, boxId, file) => {
     throw error;
   }
 };
+export const adminCreateAccount = async (userName, name, password, email, token) => {
+  try {
+    const formData = new FormData();
+    formData.append('UserName', userName);
+    formData.append('Name', name);
+    formData.append('Password', password);
+    formData.append('Email', email);
+
+    const response = await fetch('http://localhost:5296/api/Account/AdminCreateAccount', {
+      method: 'POST',
+      body: formData,
+      headers: {
+
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error creating account');
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.error('Error in adminCreateAccount:', error.message);
+    throw error; 
+  }
+};
+export const banUser = async (userId, token) => {
+  try {
+    const response = await fetch(`http://localhost:5296/api/Admin/BanUser?userId=${userId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${token}`, 
+      },
+    });
+
+    if (response.ok) {
+      console.log('User banned successfully');
+      return true; 
+    } else {
+      console.error('Failed to ban user');
+      return false;
+    }
+  } catch (error) {
+    console.error('Error banning user:', error.message);
+    return false;
+  }
+};
+export const removeBoxShare = async (boxId, userName, token) => {
+  const apiUrl = `http://localhost:5296/api/BoxInteract/RemoveBoxShare?boxId=${boxId}&userName=${userName}`;
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to remove box share. Status: ${response.status}`);
+    }
+
+    // Parse the JSON response
+    const data = await response.text();
+    return data; 
+  } catch (error) {
+    console.error('Error removing box share:', error.message);
+    throw error;
+  }
+};
+
+
 
 

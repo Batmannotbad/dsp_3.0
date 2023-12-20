@@ -29,11 +29,12 @@ const PostView = () => {
                 const boxDetailData = await getBoxDetail(token, selectedPostId);
                 setPostData(boxDetailData);
     
-                const sharedUserData = await getBoxShare(token, selectedPostId);
-                setSharedUsers(sharedUserData);
+                // const sharedUserData = await getBoxShare(token, selectedPostId);
+                // setSharedUsers(sharedUserData);
 
                 const postFilesList = await getBoxFiles(token,selectedPostId);
                 setPostFiles(postFilesList);
+                console.log("lấy post file");
                 console.log(postFilesList);
                 console.log(boxDetailData);
                 console.log(postFilesList);
