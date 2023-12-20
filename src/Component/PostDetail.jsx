@@ -6,6 +6,7 @@ import { FileIcon, defaultStyles } from 'react-file-icon';
 import UpdateModal from './UpdateModal';
 import { Link } from 'react-router-dom';
 import { getFileExtension } from '../functions';
+import ShareModal from './ShareModal';
 
 
 const PostDetail = ({ postId }) => {
@@ -17,6 +18,8 @@ const PostDetail = ({ postId }) => {
     const [sharedUsers,setSharedUsers]= useState([]);
     const [postFiles, setPostFiles] = useState([]);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
+    const [showShareModal, setShowShareModal] = useState(false);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -71,7 +74,12 @@ const PostDetail = ({ postId }) => {
       const handleCloseUpdateModal = () => {
         setShowUpdateModal(false);
       };
-
+      const handleShareModal =() => {
+        setShowShareModal(true);
+      }
+      const closeShareModal = () => {
+        setShowShareModal(false);
+      }
   return (
     <div className='prev-container'>
         <div className='post-banner-prev'>
@@ -90,7 +98,7 @@ const PostDetail = ({ postId }) => {
             handleConfirm={confirmDelete}
             />
             {postData && postData.url && (
-                <Link to={`/post/${postData.url}`}>
+                <Link to={`/post/${postData.id}/${postData.url}`}>
                     <button className='control-btn'>
                     <img src="./img/detailsbtn.png" alt="detailsbtn" />
                     </button>
@@ -142,9 +150,13 @@ const PostDetail = ({ postId }) => {
         </div>
         </div>
         <div className='post-edit d-flex mt-4 justify-content-evenly gap-5'>
-            <button className='post-edit-btn share-btn'>Chia sẻ</button>
+            <button className='post-edit-btn share-btn'onClick={handleShareModal}>Chia sẻ</button>
             <button className='edit-btn post-edit-btn'onClick={handleEditClick}>Chỉnh sửa</button>
         </div>
+        <ShareModal
+            show={showShareModal}
+            handleClose={closeShareModal}
+            />
         <UpdateModal
         show={showUpdateModal}
         handleClose={handleCloseUpdateModal}

@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 const Header = () => {
   const dispatch = useDispatch();
   const token = useSelector(state => state.user.token);
+  const userRole = useSelector(state => state.user.role);
   const [user, setUser] = useState(null);
 
 
@@ -42,7 +43,7 @@ const Header = () => {
           </Link>
           </div>
           <div className='home-nav link-nav  '>
-            <a href="/home" className='px-3 links-border-right'>Trang chủ</a>
+            <a href="/" className='px-3 links-border-right'>Trang chủ</a>
           </div>
           <div className='intro-nav link-nav'>
             <a href="/" className='px-3 links-border-right'>Giới thiệu</a>
@@ -51,25 +52,36 @@ const Header = () => {
             <a href="/" className='px-3'>Trợ giúp</a>
           </div>
           </div>
-          <Dropdown className='d-flex'>
-            <Dropdown.Toggle >
-              <div className='user-info d-flex gap-2 align-items-center'>
-                <div className='user-avt'>
-                  <img src={`http://localhost:5296/${user?.img}`} alt="avt" className='rounded-circle'/>
+          {user && (
+          <Dropdown className="d-flex">
+            <Dropdown.Toggle>
+              <div className="user-info d-flex gap-2 align-items-center">
+                <div className="user-avt">
+                  <img
+                    src={`http://localhost:5296/${user?.img}`}
+                    alt="avt"
+                    className="rounded-circle"
+                  />
                 </div>
-                <div className='info d-flex flex-column align-items-center gap-1'>
+                <div className="info d-flex flex-column align-items-center gap-1">
                   <span className="name">{user?.name}</span>
-                  <span className='job-title'>{user?.jobTitle}</span>
+                  <span className="job-title">{user?.jobTitle}</span>
                 </div>
               </div>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item as={Link} to="/user">Hồ sơ</Dropdown.Item>
-              <Dropdown.Item onClick={handleLogout}>
-                Đăng xuất
+              <Dropdown.Item as={Link} to="/user">
+                Hồ sơ
               </Dropdown.Item>
-              </Dropdown.Menu>
+              {userRole && userRole.role === 'Admin' && (
+                <Dropdown.Item as={Link} to="/admin/home">
+                  Quản trị
+                </Dropdown.Item>
+              )}
+              <Dropdown.Item onClick={handleLogout}>Đăng xuất</Dropdown.Item>
+            </Dropdown.Menu>
           </Dropdown>
+        )}
         </div>
       </div>
   )

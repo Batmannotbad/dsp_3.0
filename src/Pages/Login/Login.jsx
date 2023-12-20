@@ -55,7 +55,7 @@ const Login = () => {
         <h1 className=''>DSP</h1>
       </div>
       <div className='web-name-contain mt-1 d-flex justify-content-center'>
-        <h3 className='web-name px-2 pb-2 pt-1'>Nền tảng chia sẻ dữ liệu quốc gia</h3>
+        <h3 className='web-name px-2 pb-2 pt-1'>Trag chia sẻ dữ liệu nội bộ</h3>
       </div>
       <div className='outsider px-3 pb-2'>
         <div className='form-container container d-flex align-items-center flex-column pt-3 mt-2 rounded'>
@@ -69,7 +69,7 @@ const Login = () => {
             </div>
             </div>
             <form className='login-form w-100 px-3 py-2 d-flex flex-column' onSubmit={handleFormSubmit}>
-              <div className="mb-2">
+              <div className="mb-2 pt-4">
                 <label htmlFor="username" className="form-label">Tên đăng nhập</label>
                 <input 
                   type="text"
@@ -79,7 +79,7 @@ const Login = () => {
                   placeholder="Nhập tên đăng nhập" />
                   {!isUsernameValid && <div className="invalid-feedback">{usernameErrorMessage}</div>}
               </div>
-              <div className="mb-2">
+              <div className="mb-2 pt-4">
                 <label htmlFor="password" className="form-label">Mật khẩu</label>
                 <input 
                   type="password"
@@ -89,24 +89,24 @@ const Login = () => {
                   placeholder='Nhập mật khẩu' 
                   />
               </div>
-              <div className="mb-2 pt-2">
+              {/* <div className="mb-2 pt-2">
                 <div className="form-check form-switch d-flex align-items-center gap-2">
                   <input className="form-check-input" type="checkbox" id="rememberPasswordCheck" />
                   <label className="form-check-label check-label" htmlFor="rememberPasswordCheck">Nhớ mật khẩu</label>
                   {!isPasswordValid && <div className="invalid-feedback">{passwordErrorMessage}</div>}
                 </div>
-              </div>
+              </div> */}
               
-              <div className="mb-1 text-end">
+              {/* <div className="mb-1 text-end">
                 <a href="/forgot-password" className='forgot-pass-text me-4'>Quên mật khẩu?</a>
-              </div>
-              <div className='d-flex align-items-center justify-content-center submit-container'>
+              </div> */}
+              <div className='d-flex align-items-center justify-content-center submit-container pt-5'>
                 <button type="submit" className="submit-btn mx-4 mb-2">ĐĂNG NHẬP</button>
               </div>
-              <div className='direct d-flex gap-2 justify-content-center'>
+              {/* <div className='direct d-flex gap-2 justify-content-center'>
                 <span >Bạn chưa có tài khoản?</span>
                 <a href="/signup" className='direct-link'>Đăng ký ngay</a>
-              </div>
+              </div> */}
             </form>
             <div className='angle-pattern'>
               <img src="/img/lotus1.png" alt="deco png"/>

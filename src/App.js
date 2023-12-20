@@ -11,25 +11,50 @@ import UserList from './Component/UserList';
 import ViewChart from './Component/ViewChart';
 import PostView from './Pages/PostView/Postv';
 import Test2 from './Test2';
+import AdminHome from './Pages/AdminHome/AdminHome';
+import Error from './Pages/Error/Error';
+import AdminUser from './Pages/AdminUserControl/AdminUser';
+import AdminPost from './Pages/AdminPostControl/AdminPost';
 
 
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const userRole = useSelector(state => state.user.role);
 
   return (
     <Router>
       <div className="App">
         <Routes>
           <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/test" element={<Test />} />
-          <Route path="/user" element={<User />} />
+          
+          <Route path="/user" element={isLoggedIn ? <User />: <Navigate to ="/login"/>} />
           <Route path="/table" element={<DataTable />} />
           <Route path='/userlist' element={<UserList/>}/>
-          <Route path='/viewchart' element={<ViewChart/>}/>
-          <Route path='/test2' element={<Test2/>}/>
+          {userRole && userRole.role === 'Admin' ? (
+            <Route path="/admin/home" element={<AdminHome />} />
+            
+          ) : (
+            <Route path="/admin/home" element={<Navigate to="/error" />} />
+          )}
+          {userRole && userRole.role === 'Admin' ? (
+            <Route path="/admin/user" element={<AdminUser />} />
+            
+          ) : (
+            <Route path="/admin/user" element={<Navigate to="/error" />} />
+          )}
+          {userRole && userRole.role === 'Admin' ? (
+            <Route path="/admin/post" element={<AdminPost />} />
+            
+          ) : (
+            <Route path="/admin/user" element={<Navigate to="/error" />} />
+          )}
 
-          <Route path="/post/:url" element={<PostView/>} exact />
+
+          <Route path='/error' element={<Error/>}/>
+          <Route path='/test' element={<Test2/>}/>
+
+
+          <Route path="/post/:id/:url" element={<PostView/>}  />
           <Route path='/' element={isLoggedIn ? <Dashboard/> : <Navigate to="/login" />} />
         </Routes>
       </div>

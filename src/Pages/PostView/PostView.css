@@ -89,6 +89,6 @@
   width: 100%;
 }
 .download-one-btn img{
-  width: 30%;
+  /* width: 30%; */
   object-fit: cover;
 }

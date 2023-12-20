@@ -4,20 +4,22 @@ import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import CreateNew from '../../Component/CreateNew/CreateNew';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../features/userSlice';
+import { logout,setRole } from '../../features/userSlice';
 import PostGrid from '../../Component/PostGrid';
-import { getCurrentUser, userLogout } from '../../APIController';
+import { getCurrentUser, getRoleById, userLogout } from '../../APIController';
 import PostDetail from '../../Component/PostDetail';
 import SharedPost from '../../Component/SharedPost';
 import { Dropdown } from 'react-bootstrap';
 const Dashboard = () => {
   const dispatch = useDispatch();
+  const userRole = useSelector(state => state.user.role);
   const selectedPostID = useSelector(state => state.post.selectedPostID);
   const token = useSelector(state => state.user.token);
   const [user, setUser] = useState(null);
   const [show,setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [roleData, setRoleData] = useState(null);
   const [showPostDetail, setShowPostDetail] = useState(false);
   const handleLogout = async () => {
     try {
@@ -31,7 +33,12 @@ const Dashboard = () => {
     try {
       const data = await getCurrentUser(token);
       setUser(data);
-      console.log(data);
+
+      const roleData = await getRoleById (token, data.id);
+      dispatch(setRole(roleData));
+      setRoleData (roleData);
+      // console.log('User Data:', data);
+      console.log('Role Data:', roleData);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -58,7 +65,7 @@ const Dashboard = () => {
           </Link>
           </div>
           <div className='home-nav link-nav  '>
-            <a href="/home" className='px-3 links-border-right'>Trang chủ</a>
+            <a href="/" className='px-3 links-border-right'>Trang chủ</a>
           </div>
           <div className='intro-nav link-nav'>
             <a href="/" className='px-3 links-border-right'>Giới thiệu</a>
@@ -81,9 +88,15 @@ const Dashboard = () => {
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item as={Link} to="/user">Hồ sơ</Dropdown.Item>
+              {userRole && userRole.role === 'Admin' && (
+                <Dropdown.Item as= {Link} to ="/admin/home">
+                  Quản trị
+                </Dropdown.Item>
+              )}
               <Dropdown.Item onClick={handleLogout}>
                 Đăng xuất
               </Dropdown.Item>
+              
               </Dropdown.Menu>
           </Dropdown>
         </div>
@@ -95,20 +108,20 @@ const Dashboard = () => {
             {/* <a className="nav-link" data-bs-toggle="tab" href="#recently">Gần đây</a> */}
           </div>
           </div>
-          <div className='search-box'>
+          {/* <div className='search-box'>
             <input type="search" className="search-input" placeholder="Tìm kiếm" />
-          </div>
+          </div> */}
         </div>
       </div>
       <div className='content-container py-3'>
         <div className='list-container'>
           <div className='filter-section d-flex justify-content-between'>
             <div className='dropdown-filter d-flex gap-2 align-items-center'>
-              <div className='filter-label'>Sắp xếp theo: </div>
+              {/* <div className='filter-label'>Sắp xếp theo: </div>
               <select name="" id="" className='filter-select'>
                 <option value="recently">Gần đây</option>
                 <option value="dateModified">Ngày tạo</option>
-              </select>
+              </select> */}
             </div>
             <div className='add-btn'>
               <Button className='btn-add-post d-flex align-items-center' onClick={handleShow}>

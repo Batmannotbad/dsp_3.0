@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { getBoxDetail, getBoxFiles, getBoxShare, updatePost } from '../APIController';
+import { getBoxDetail, getBoxFiles, getBoxShare, updatePost, uploadFile } from '../APIController';
 import { Modal, Button, Alert, Form } from 'react-bootstrap';
+import FileTable from './FileTable';
 
 
 const UpdateModal = ({show,handleClose}) => {
@@ -16,24 +17,53 @@ const UpdateModal = ({show,handleClose}) => {
     const [postFiles, setPostFiles] = useState([]);
     const [sharedUsers,setSharedUsers]= useState([]);
     const [postData, setPostData] = useState(null);
+    const [file, setFile] = useState([]);
 
 
 
-    const handleUpdateBox = async () => {
+
+    const handleUpdateBox = async (e) => {
+        e.preventDefault();
+    
         try {
-            const isSuccess = await updatePost(token, postID, title, content, sharedStatus, img);
-            if (isSuccess) {
-                setResponse('Tạo mới thành công!');
-                setShowAlert(true);
-              } else {
-                console.error('Tạo mới không thành công!'); 
-                setResponse('Tạo mới không thành công!');
-                setShowAlert(true);
-              }
-          } catch (error) {
-            console.error('Failed to update Box:', error.message);
+          const uploadPromises = file.map((fileItem) => {
+            if (fileItem) {
+              return uploadFile(token, postID, fileItem);
+            }
+            return null;
+          });
+    
+          const uploadedFiles = await Promise.all(uploadPromises);
+    
+          const isSuccess = await updatePost(token, postID, title, content, sharedStatus, img, uploadedFiles);
+          if (isSuccess) {
+            setResponse('Chỉnh sửa thành công!');
+            setShowAlert(true);
+          } else {
+            console.error('Chỉnh sửa không thành công!');
+            setResponse('Chỉnh sửa không thành công!');
+            setShowAlert(true);
           }
-    };
+        } catch (error) {
+          console.error('Failed to update Box:', error.message);
+        }
+      };
+    const handleFileChange = (e, index) => {
+        const newFiles = Array.from(e.target.files);
+        const updatedFiles = [...file];
+        updatedFiles[index] = newFiles[0];
+        setFile(updatedFiles);
+      };
+    
+    const handleRemoveFile = (index) => {
+        const updatedFiles = [...file];
+        updatedFiles.splice(index, 1);
+        setFile(updatedFiles);
+      };
+      const handleAddFileInput = () => {
+        setFile([...file, null]);
+      };
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -106,6 +136,22 @@ const UpdateModal = ({show,handleClose}) => {
                             onChange={() => setSharedStatus(!sharedStatus)}
                         />
                     </div>
+                    <div>
+                        <FileTable postFiles={postFiles} boxId={postID} token={token}/>
+                    </div>
+                    <div className='d-flex flex-column gap-2'>
+                        {file.map((fileItem, index) => (
+                            <div key={index} className="d-flex gap-2">
+                            <input type="file" onChange={(e) => handleFileChange(e, index)} />
+                            <Button variant="danger" size="sm" onClick={() => handleRemoveFile(index)}>
+                                Xóa
+                            </Button>
+                            </div>
+                        ))}
+                        <button type="button" className='btn-add-file' onClick={handleAddFileInput}>
+                            Thêm tệp
+                        </button>
+                        </div>
                 </div>
                 <div className='d-flex justify-content-end pe-5'>
                     <button type="submit" className='btn-add'>Chỉnh sửa</button>

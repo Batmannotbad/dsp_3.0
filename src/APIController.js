@@ -452,62 +452,7 @@ export const downloadAllFiles = async (token,boxId) => {
   }
 };
 
-// export const downloadFile = async (token,boxId,fileName) => {
-//   try {
-//     const response = await fetch(`http://localhost:5296/api/Box/DowloadFile?boxId=${boxId}&fileName=${fileName}`,{
-//       method: 'GET',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         'Authorization': `Bearer ${token}`
-//       }
-//     });
 
-//     if (response.ok) {
-//       const blobData = await response.blob();
-//       const downloadUrl = window.URL.createObjectURL(blobData);
-//       return downloadUrl;
-
-//     } else {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
-//     }
-//   } catch (error) {
-//     console.error('Error:', error);
-//     throw error;
-//   }
-// };
-// export const downloadFile = async (token, boxId, fileName) => {
-//   try {
-//     const response = await fetch(
-//       `http://localhost:5296/api/Box/DowloadFile?boxId=${boxId}&fileName=${fileName}`,
-//       {
-//         method: 'GET',
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Authorization': `Bearer ${token}`
-//         }
-//       }
-//     );
-
-//     if (response.ok) {
-//       const contentDisposition = response.headers.get('Content-Disposition');
-//       const match = contentDisposition && contentDisposition.match(/filename="(.+?)"/);
-//       const suggestedFileName = match && match[1];
-
-//       const sanitizedFileName = suggestedFileName || fileName;
-
-//       const blobData = await response.blob();
-
-//       const downloadUrl = window.URL.createObjectURL(blobData);
-
-//       return { downloadUrl, fileName: sanitizedFileName };
-//     } else {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
-//     }
-//   } catch (error) {
-//     console.error('Error:', error);
-//     throw error;
-//   }
-// };
 export const downloadFile = async (token, boxId, fileName) => {
   try {
     const response = await fetch(
@@ -550,4 +495,129 @@ export const downloadFile = async (token, boxId, fileName) => {
     throw error;
   }
 };
+
+export const getRoleById = async(token,userId) => {
+  try {
+    const response = await fetch (
+      `http://localhost:5296/api/Roles/GetRoleByUserId?userId=${userId}`,
+      {
+        method:"GET",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+    if (response.ok) {
+      const roleData = await response.json();
+      const extractedRole = roleData[0];
+
+      return { role: extractedRole };
+    } else {
+      throw new Error(`Lỗi HTTP! Trạng thái: ${response.status}`);
+    }
+  } catch (error){
+    console.error('Lỗi: ', error);
+    throw error;
+  }
+}
+
+export const getAllBoxes = async (token) => {
+  try {
+    const response = await fetch('http://localhost:5296/api/Admin/GetALLBox', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error(`Failed to fetch data. Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+}; 
+export const addBoxShare = async (boxId, userName, editAccess, token) => {
+  try {
+    let apiUrl = `http://localhost:5296/api/BoxInteract/AddBoxShare?boxId=${boxId}&userName=${userName}`;
+
+    if (editAccess !== undefined) {
+      apiUrl += `&EditAccess=${editAccess}`;
+    }
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      
+    });
+
+    if (response.ok) {
+      const responseData = await response.text();
+      console.log(responseData);
+      return responseData; 
+    } else {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+export const deleteFile = async (token,Id ,boxId, fileName, userName) => {
+  try {
+    const response = await fetch(`http://localhost:5296/api/Box/DeleteFile?Id=${Id}&boxId=${boxId}&fileName=${fileName}&userName=${userName}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.text();
+      return data;
+    } else {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+export const uploadFile = async (token, boxId, file) => {
+  try {
+    const formData = new FormData();
+    formData.append('boxId', boxId);
+    formData.append('file', file);
+
+    const response = await fetch(`http://localhost:5296/api/Box/UploadBoxFile?boxId=${boxId}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (response.ok) {
+      const data = await response.text();
+      console.log('File uploaded successfully:', data);
+      return data;
+    } else {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    throw error;
+  }
+};
+
 

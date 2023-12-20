@@ -1,42 +1,67 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox } from '@mui/material';
 import { FileIcon, defaultStyles } from 'react-file-icon';
 import { getFileExtension } from '../functions';
 import { useSelector } from 'react-redux';
-import { downloadAllFiles, downloadFile } from '../APIController';
+import { deleteFile, downloadAllFiles, downloadFile, getCurrentUser } from '../APIController';
 
-const FileTable = ({ postFiles,boxId,token }) => {
-  // const [selectedRows, setSelectedRows] = useState([]);
+  const FileTable = ({ postFiles,boxId,token }) => {
+    // const [selectedRows, setSelectedRows] = useState([]);
+    const [user,setUser] = useState([])
+    useEffect(() => {
+      const fetchData = async () => {
+          try {
+              const data = await getCurrentUser(token);
+              setUser(data);
+              console.log("data: ",data);
+          } catch (error) {
+              console.error(error);
+          }
+      };
 
-  
+      fetchData();
+  }, [boxId]);   
 
-  const downloadAll = async () => {
-    try {
-      const downloadUrl = await downloadAllFiles(token, boxId);
-      window.location.href = downloadUrl;
-    } catch (error) {
-      console.error('Error downloading files:', error);
-    }
-  };
- 
-  const handleDownloadClick = async (fileName) => {
-    try {
-      const { downloadUrl, sanitizedFileName } = await downloadFile(token, boxId, fileName);
-      const a = document.createElement('a');
-      a.href = downloadUrl;
-      a.download = `${fileName}`;
+    
+
+    const downloadAll = async () => {
+      try {
+        const downloadUrl = await downloadAllFiles(token, boxId);
+        window.location.href = downloadUrl;
+      } catch (error) {
+        console.error('Error downloading files:', error);
+      }
+    };
   
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-  
-      console.log('Suggested File Name2:', sanitizedFileName);
-      console.log('Download URL:', downloadUrl);
-    } catch (error) {
-      console.error('Error downloading file:', error);
-    }
-  };
-  
+    const handleDownloadClick = async (fileName) => {
+      try {
+        const { downloadUrl, sanitizedFileName } = await downloadFile(token, boxId, fileName);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `${fileName}`;
+    
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    
+        console.log('Suggested File Name2:', sanitizedFileName);
+        console.log('Download URL:', downloadUrl);
+      } catch (error) {
+        console.error('Error downloading file:', error);
+      }
+    };
+      const handleDeleteFile = async(fileName,Id) => {
+        try {
+          const username = user?.username;
+
+          const result = await deleteFile(token,Id,boxId,fileName,username);
+          console.log('File deleted successfully:', result);
+          window.location.reload();
+        } catch (error) {
+          console.error('Error deleting file:', error);
+        }
+      }
+      
 
   
   
@@ -60,6 +85,7 @@ const FileTable = ({ postFiles,boxId,token }) => {
                 </TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -80,6 +106,11 @@ const FileTable = ({ postFiles,boxId,token }) => {
                   <TableCell>
                     <button className='download-one-btn'>
                       <img src="/img/upload.png" alt="download" onClick={() => handleDownloadClick(file.name)} />
+                    </button>
+                  </TableCell>
+                  <TableCell>
+                    <button className='download-one-btn'>
+                      <img src="/img/delete.png" alt="delete" onClick={() => handleDeleteFile(file.name, file.id)} />
                     </button>
                   </TableCell>
                 </TableRow>

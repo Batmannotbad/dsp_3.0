@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom'
-import { getBoxDetail, getBoxFiles, getBoxShare } from '../../APIController';
+import { getBoxDetail, getBoxFiles, getBoxShare, getCurrentUser } from '../../APIController';
 import Header from '../../Component/Header';
 import QRCode from 'qrcode.react';
 import './PostView.css';
@@ -12,14 +12,17 @@ import FileTable from '../../Component/FileTable';
 const PostView = () => {
     const params = useParams();
     const token = useSelector(state => state.user.token);
-    const selectedPostId = useSelector(state => state.post.selectedPostID);
+    const selectedPostId = params.id;
     const [postData, setPostData] = useState(null);
     const [postFiles, setPostFiles] = useState([]);
+    const [user,setUser] = useState([])
     const [sharedUsers,setSharedUsers]= useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const data = await getCurrentUser(token);
+                setUser(data);
                 console.log(selectedPostId);
                 setSharedUsers([]);
                 setPostFiles([]);
@@ -85,7 +88,7 @@ const PostView = () => {
                         postData&& postData.url &&
                         <div className='d-flex  align-items-center link-box gap-5'>
                             <div className='link-title'>Đường dẫn</div>
-                            <div className='text-center'>http://Localhost:3000/post/{postData.url}</div>
+                            <div className='text-center'>http://192.168.8.109:3000/post/{selectedPostId}/{postData.url}</div>
                         </div>
                     }
                     </div>
@@ -94,7 +97,7 @@ const PostView = () => {
                             postData && postData.url &&
                             <QRCode
                             id='qrcode'
-                            value={`http://Localhost:3000/post/${postData.url}`}
+                            value={`http://192.168.8.109:3000/post/${selectedPostId}/${postData.url}`}
                             size={290}
                             level={'H'}
                             includeMargin={true}
